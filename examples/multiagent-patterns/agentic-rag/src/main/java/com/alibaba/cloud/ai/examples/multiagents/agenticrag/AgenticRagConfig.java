@@ -158,7 +158,6 @@ public class AgenticRagConfig {
 			strategies.put("final_answer", new ReplaceStrategy());
 			strategies.put("retry_count", new ReplaceStrategy());
 			strategies.put("retrieval_rounds", new ReplaceStrategy());
-			strategies.put("messages", new AppendStrategy(false));
 			return strategies;
 		});
 

@@ -43,7 +43,11 @@ public class ClassifyNode implements NodeAction {
 		String question = state.value("question").map(Object::toString).orElse("");
 		String prompt = promptTemplate.formatted(question);
 		String response = chatModel.call(new Prompt(prompt)).getResult().getOutput().getText();
-		String route = response != null && response.trim().toUpperCase().startsWith("RETRIEVE") ? "retrieve" : "answer";
+		// Fail toward retrieval: only an explicit ANSWER skips it, so an unexpected
+		// or unparsable classifier response costs one similarity search instead of
+		// answering a product question without grounding.
+		String normalized = response == null ? "" : response.trim().toUpperCase();
+		String route = normalized.startsWith("ANSWER") ? "answer" : "retrieve";
 		return Map.of("route", route);
 	}
 }
